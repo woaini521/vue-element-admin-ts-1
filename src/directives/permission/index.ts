@@ -2,7 +2,7 @@
  * @Description: 自定义权限指令（v-permission="['admin', 'editor']"）
  * @Author: 晓枫
  * @Date: 2019-11-14 09:57:52
- * @LastEditTime: 2019-11-14 10:16:27
+ * @LastEditTime: 2019-11-22 11:30:56
  */
 import { DirectiveOptions } from 'vue'
 import { UserModule } from '@/store/modules/user'
@@ -18,6 +18,7 @@ export const permission: DirectiveOptions = {
       })
 
       if(!hasPermission) {
+        // 移除元素方法el.parentNode.removeChild(el)
         el.parentNode && el.parentNode.removeChild(el)
       }
     } else {

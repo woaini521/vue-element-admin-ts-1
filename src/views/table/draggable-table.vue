@@ -111,7 +111,6 @@ export default class extends Vue {
         ) {
           const targetRow = this.list.splice(evt.oldIndex, 1)[0]
           this.list.splice(evt.newIndex, 0, targetRow)
-
           this.newList = this.list.map(v => v.id)
         }
       }
