@@ -71,12 +71,13 @@
 import Sortable from "sortablejs"
 import { Component, Vue } from "vue-property-decorator"
 import { getArticles } from "@/api/articles"
+import { IArticleData } from '@/api/types'
 
 @Component({
   name: "DraggableTable"
 })
 export default class extends Vue {
-  private list = [];
+  private list:IArticleData[] = [];
   private oldList: number[] = [];
   private newList: number[] = [];
   private listQuery = {

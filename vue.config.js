@@ -35,20 +35,6 @@ module.exports = {
       }
     }
   },
-  pwa: {
-    name: name,
-    workboxPluginMode: 'InjectManifest',
-    iconPaths: {
-      favicon32: 'favicon.ico',
-      favicon16: 'favicon.ico',
-      appleTouchIcon: 'favicon.ico',
-      maskIcon: 'favicon.ico',
-      msTileImage: 'favicon.ico'
-    },
-    workboxOptions: {
-      swSrc: path.resolve(__dirname, 'src/pwa/service-worker.js')
-    }
-  },
   pluginOptions: {
     'style-resources-loader': {
       preProcessor: 'scss',
