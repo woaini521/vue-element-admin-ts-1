@@ -1,5 +1,5 @@
 <template>
-<div class="login-container">
+  <div class="login-container">
     <el-form :model="userInfo" :rules="loginRules" ref="loginForm" class="login-form">
       <div class="title-container">
         <span class="svg-login">
@@ -14,25 +14,31 @@
           <svg-icon icon-class="user"></svg-icon>
         </span>
         <el-input
+          ref="username"
           v-model.trim="userInfo.username"
           placeholder="请输入用户名"
           @keyup.enter.native="handleLogin"
         ></el-input>
       </el-form-item>
-      <el-form-item prop="password">
-        <span class="svg-container">
-          <svg-icon icon-class="password"></svg-icon>
-        </span>
-        <el-input
-          v-model.trim="userInfo.password"
-          placeholder="请输入密码"
-          :type="passwordType"
-          @keyup.enter.native="handleLogin"
-        ></el-input>
-        <span class="svg-container" @click="showPwd">
-          <svg-icon :icon-class="passwordType === 'password' ? 'eye' : 'eye-open'" />
-        </span>
-      </el-form-item>
+      <el-tooltip v-model="capsTooltip" placement="right" manual content="大写已开启">
+        <el-form-item prop="password">
+          <span class="svg-container">
+            <svg-icon icon-class="password"></svg-icon>
+          </span>
+          <el-input
+            ref="password"
+            v-model.trim="userInfo.password"
+            placeholder="请输入密码"
+            :type="passwordType"
+            @keyup.native="checkCapslock"
+            @blur="capsTooltip = false"
+            @keyup.enter.native="handleLogin"
+          ></el-input>
+          <span class="svg-container" @click="showPwd">
+            <svg-icon :icon-class="passwordType === 'password' ? 'eye' : 'eye-open'" />
+          </span>
+        </el-form-item>
+      </el-tooltip>
 
       <el-button type="primary" class="login-btn" :loading="loading" @click="handleLogin">登录</el-button>
 
@@ -49,57 +55,72 @@
 </template>
 
 <script lang="ts">
-import { Component, Vue } from 'vue-property-decorator'
-import { Form, Input } from 'element-ui'
-import { UserModule } from '@/store/modules/user'
+import { Component, Vue } from "vue-property-decorator"
+import { Form, Input } from "element-ui"
+import { UserModule } from "@/store/modules/user"
 
 @Component({
-  name: 'Login'
+  name: "Login"
 })
 export default class extends Vue {
   private validateUsername = (rule: any, value: string, callback: Function) => {
     if (!value) {
-      callback(new Error('用户名不能为空'))
-    } else if (['admin', 'editor'].indexOf(value) === -1) {
-      callback(new Error('用户名不存在，请重新输入'))
+      callback(new Error("用户名不能为空"))
     } else {
       callback()
     }
-  }
+  };
   private validatePassword = (rule: any, value: string, callback: Function) => {
     if (value.length < 6) {
-      callback(new Error('请输入6位数以上密码'))
+      callback(new Error("请输入6位数以上密码"))
     } else {
       callback()
     }
-  }
+  };
 
   private userInfo = {
-    username: 'admin',
-    password: '123456'
-  }
-  private loading: boolean = false
+    username: "admin",
+    password: "123456"
+  };
+  private loading: boolean = false;
   private loginRules = {
-    username: [{ validator: this.validateUsername, trigger: 'blur' }],
-    password: [{ validator: this.validatePassword, trigger: 'blur' }]
+    username: [{ validator: this.validateUsername, trigger: "blur" }],
+    password: [{ validator: this.validatePassword, trigger: "blur" }]
+  };
+  private title: string = "登录";
+  private passwordType = "password";
+  private capsTooltip = false; // 大小写tooltip是否可见
+
+  mounted() {
+    if(this.userInfo.username === '') {
+      (this.$refs.username as Input).focus()
+    } else if(this.userInfo.password === '') {
+      (this.$refs.password as Input).focus()
+    }
   }
-  private title:string = '登录'
-  private passwordType = 'password'
 
   private handleLogin() {
-    (this.$refs.loginForm as Form).validate(async(valid: boolean) => {
+    (this.$refs.loginForm as Form).validate(async (valid: boolean) => {
       if (valid) {
         this.loading = true
         await UserModule.Login(this.userInfo)
         this.$router.push({
-          path: '/'
+          path: "/"
         })
       }
     })
   }
 
   private showPwd() {
-    this.passwordType = this.passwordType === 'password' ? '' : 'password'
+    this.passwordType = this.passwordType === "password" ? "" : "password"
+    this.$nextTick(() => {
+      (this.$refs.password as Input).focus()
+    })
+  }
+
+  private checkCapslock(e: KeyboardEvent) {
+    let isUppercase = e.key && e.key.length === 1 && /[A-Z]/.test(e.key)
+    this.capsTooltip = !!isUppercase
   }
 }
 </script>
@@ -130,7 +151,7 @@ $dark_gray: #889aa4;
 
       span {
         display: inline-block;
-        width: 50%
+        width: 50%;
       }
     }
   }

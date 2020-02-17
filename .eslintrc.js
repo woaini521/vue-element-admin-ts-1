@@ -17,7 +17,8 @@ module.exports = {
     'eol-last': 0,
     'keyword-spacing': 0,
     'no-trailing-spaces': 1,
-    'no-return-assign': 0
+    'no-return-assign': 0,
+    'no-unused-expressions': 1
   },
   parserOptions: {
     parser: '@typescript-eslint/parser'

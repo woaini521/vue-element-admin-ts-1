@@ -61,14 +61,14 @@ export const asyncRoutes: RouteConfig[] = [
         }
       },
       {
-        path: '/directive',
+        path: 'directive',
         component: () => import('@/views/permission/directive.vue'),
         meta: {
           title: '指令权限'
         }
       },
       {
-        path: '/role',
+        path: 'role',
         component: () => import('@/views/permission/role.vue'),
         meta: {
           title: '角色权限',

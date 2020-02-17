@@ -43,8 +43,8 @@ class User extends VuexModule implements IUserState {
   public async Login(userInfo: { username: string, password: string }) {
     let { username, password } = userInfo
     const { data } = await login({ username, password })
-    setToken(data.accessToken)
-    this.SET_TOKEN(data.accessToken)
+    setToken(data.token)
+    this.SET_TOKEN(data.token)
   }
 
   @Action
@@ -54,7 +54,7 @@ class User extends VuexModule implements IUserState {
     }
     const { data } = await getUserInfo()
     // 用户信息为空判断
-    const { roles, name, avatar } = data.user
+    const { roles, name, avatar } = data
     if(!roles && roles.length <= 0) {
       throw Error('roles mast a array!')
     }

@@ -10,8 +10,8 @@ const service = axios.create({
 
 service.interceptors.request.use(
   config => {
-    if(UserModule.token) {
-      config.headers['x-token'] = UserModule.token
+    if (UserModule.token) {
+      config.headers['Authorization'] = `Bearer ${UserModule.token}`
     }
     return config
   },
@@ -23,30 +23,22 @@ service.interceptors.request.use(
 service.interceptors.response.use(
   response => {
     const res = response.data
-    if(res.success) {
-      if(res.message) {
-        Notification({
-          title: '请求成功',
-          message: res.message,
-          type: 'success'
-        })
-      }
-    } else {
-      if(res.message) {
-        Notification({
-          title: '请求失败',
-          message: res.message || 'Error',
-          type: 'error'
-        })
-      }
+    const errMsg = res.msg || '请求失败'
+    if (res.code !== 0) {
+      Notification({
+        title: '请求失败',
+        message: errMsg,
+        type: 'error'
+      })
     }
     return res
   },
   error => {
     console.log('err' + error) // for debug
+    const { msg } = error.response.data
     Notification({
-      title: '网络错误',
-      message: error.message,
+      title: '请求失败',
+      message: msg || '请求失败',
       type: 'error'
     })
     return Promise.reject(error)
